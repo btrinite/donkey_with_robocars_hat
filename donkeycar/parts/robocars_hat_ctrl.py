@@ -12,7 +12,7 @@ class RobocarsHatIn:
         self.inAux1 = 0.0
         self.inAux2 = 0.0
 
-        self.sensor = dk.parts.actuator.Robocars(self.cfg)
+        self.sensor = dk.parts.actuator.RobocarsHat(self.cfg)
         self.on = True
 
     def update(self):
