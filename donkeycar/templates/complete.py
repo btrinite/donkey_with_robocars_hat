@@ -639,7 +639,7 @@ def drive(cfg, model_path=None, use_joystick=False, model_type=None,
     elif cfg.DRIVE_TRAIN_TYPE == "ROBOCARSHAT":
         from donkeycar.parts.actuator import RobocarsHat
         train_controller = RobocarsHat(cfg)
-        V.add(steetrain_controllerring, inputs=['throttle','angle'], threaded=True)
+        V.add(train_controller, inputs=['throttle','angle'], threaded=True)
 
     # OLED setup
     if cfg.USE_SSD1306_128_32:
