@@ -824,14 +824,21 @@ class RobocarsHat:
 
     robocarshat_device = None
     robocarshat_lock = threading.Lock()
+    throttle = 0
+    steering = 0
 
     def __init__(self, cfg):
         import serial
 
         self.cfg = cfg
-        
+
+        throttle = 0
+        steering = 0
+
         if RobocarsHat.robocarshat_device == None:
             RobocarsHat.robocarshat_device = serial.Serial(self.cfg.ROBOCARSHAT_SERIAL_PORT, 1000000, timeout = 0.01)
+
+        self.running = True
 
 
     def set_pulse(self, throttle, steering):
@@ -853,9 +860,25 @@ class RobocarsHat:
         with RobocarsHat.robocarshat_lock:
             RobocarsHat.robocarshat_device.write(("%d,%d\n" % (pulse_throttle, pulse_steering)).encode('ascii'))
 
+    def run_threaded(self, throttle, steering):
+        self.throttle = throttle
+        self.steering = steering
+
     def run(self, throttle, steering):
-        set_pulse(throttle, steering)
+        self.run_threaded(throttle, steering)
+        self.set_pulse(self.throttle, self.steering)
+
+    def shutdown(self):
+        # set steering straight
+        self.throttle = 0
+        self.steering = 0
+        time.sleep(0.3)
+        self.running = False
         
+    def update(self):
+        while self.running:
+            self.set_pulse(self.throttle, self.steering)
+
 
     def readline(self):
         ret = None
