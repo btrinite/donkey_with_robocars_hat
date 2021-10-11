@@ -809,3 +809,61 @@ class ArdPWMThrottle:
         # stop vehicle
         self.run(0)
         self.running = False
+
+class RobocarsHat:
+    '''
+    Robocars Hat Servo controller
+    '''
+
+    MIN_THROTTLE = -1
+    MAX_THROTTLE = 1
+    MIN_STEERING = -1
+    MAX_STEERING = 1
+
+    import threading
+
+    robocarshat_device = None
+    robocarshat_lock = threading.Lock()
+
+    def __init__(self, cfg):
+        import serial
+
+        self.cfg = cfg
+        
+        if RobocarsHat.robocarshat_device == None:
+            RobocarsHat.robocarshat_device = serial.Serial(self.cfg.ROBOCARSHAT_SERIAL_PORT, 1000000, timeout = 0.01)
+
+
+    def set_pulse(self, throttle, steering):
+
+        if throttle > 0:
+            pulse_throttle = dk.utils.map_range(throttle, 0, self.MAX_THROTTLE,
+                                            self.cfg.ROBOCARSHAT_PWM_OUT_THROTTLE_IDLE, self.cfg.ROBOCARSHAT_PWM_OUT_THROTTLE_MAX)
+        else:
+            pulse_throttle = dk.utils.map_range(throttle, self.MIN_THROTTLE, 0,
+                                            self.cfg.ROBOCARSHAT_PWM_OUT_THROTTLE_MIN, self.cfg.ROBOCARSHAT_PWM_OUT_THROTTLE_IDLE)
+
+        if steering > 0:
+            pulse_steering = dk.utils.map_range(steering, 0, self.MAX_STEERING,
+                                            self.cfg.ROBOCARSHAT_PWM_OUT_STEERING_IDLE, self.cfg.ROBOCARSHAT_PWM_OUT_STEERING_MAX)
+        else:
+            pulse_steering = dk.utils.map_range(steering, self.MIN_STEERING, 0,
+                                            self.cfg.ROBOCARSHAT_PWM_OUT_STEERING_MIN, self.cfg.ROBOCARSHAT_PWM_OUT_STEERING_IDLE)
+
+        with RobocarsHat.robocarshat_lock:
+            RobocarsHat.robocarshat_device.write(("%d,%d\n" % (pulse_throttle, pulse_steering)).encode('ascii'))
+
+    def run(self, throttle, steering):
+        set_pulse(throttle, steering)
+        
+
+    def readline(self):
+        ret = None
+        with RobocarsHat.robocarshat_lock:
+            if RobocarsHat.robocarshat_device.inWaiting() > 8:
+                ret = RobocarsHat.robocarshat_device.readlines()
+
+        if ret != None:
+            ret = ret[-1].rstrip()
+
+        return ret
