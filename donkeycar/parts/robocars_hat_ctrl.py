@@ -39,7 +39,7 @@ class RobocarsHatIn:
                     time.sleep(s)
 
     def run_threaded(self):
-        return self.inSteering, self.inThrottle
+        return self.inSteering, self.inThrottle, 'user', False
 
     def shutdown(self):
         # indicate that the thread should be stopped

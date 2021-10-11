@@ -53,7 +53,7 @@ SSD1306_RESOLUTION = 1 # 1 = 128x32; 2 = 128x64
 #DC_TWO_WHEEL uses HBridge pwm to control two drive motors, one on the left, and one on the right.
 #SERVO_HBRIDGE_PWM use ServoBlaster to output pwm control from the PiZero directly to control steering, and HBridge for a drive motor.
 #PIGPIO_PWM uses Raspberrys internal PWM
-DRIVE_TRAIN_TYPE = "I2C_SERVO" # I2C_SERVO|DC_STEER_THROTTLE|DC_TWO_WHEEL|DC_TWO_WHEEL_L298N|SERVO_HBRIDGE_PWM|PIGPIO_PWM|MM1|MOCK
+DRIVE_TRAIN_TYPE = "I2C_SERVO" # I2C_SERVO|DC_STEER_THROTTLE|DC_TWO_WHEEL|DC_TWO_WHEEL_L298N|SERVO_HBRIDGE_PWM|PIGPIO_PWM|MM1|MOCK|ROBOCARSHAT
 
 #STEERING
 STEERING_CHANNEL = 1            #channel on the 9685 pwm board 0-15
@@ -239,6 +239,7 @@ MM1_SHOW_STEERING_VALUE = False
 MM1_SERIAL_PORT = '/dev/ttyS0'  # Serial Port for reading and sending MM1 data.
 
 #ROBOCARSHAT
+USE_ROBOCARS_HAT_AS_CONTROLLER  = False
 ROBOCARSHAT_SERIAL_PORT = '/dev/serial0'
 ROBOCARSHAT_PWM_OUT_THROTTLE_MIN    =   1000   
 ROBOCARSHAT_PWM_OUT_THROTTLE_IDLE   =   1500
