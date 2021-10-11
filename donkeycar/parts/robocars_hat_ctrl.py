@@ -2,6 +2,7 @@ from datetime import datetime
 import donkeycar as dk
 import re
 import time
+from donkeycar.parts.actuator import RobocarsHat
 
 class RobocarsHatIn:
     def __init__(self, cfg):
@@ -12,7 +13,7 @@ class RobocarsHatIn:
         self.inAux1 = 0.0
         self.inAux2 = 0.0
 
-        self.sensor = dk.parts.actuator.RobocarsHat(self.cfg)
+        self.sensor = RobocarsHat(self.cfg)
         self.on = True
 
     def update(self):
