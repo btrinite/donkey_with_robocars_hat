@@ -226,7 +226,7 @@ def drive(cfg, model_path=None, use_joystick=False, model_type=None,
             V.add(ctr, inputs=['cam/image_array'], outputs=['user/angle', 'user/throttle', 'user/mode', 'recording'],threaded=True)
         
     if cfg.USE_ROBOCARS_HAT_AS_CONTROLLER:
-            from donkeycar.parts.robocqrs_hqt_ctrl import RobocarsHatIn
+            from donkeycar.parts.robocars_hat_ctrl import RobocarsHatIn
             ctr = RobocarsHatIn(cfg)
             V.add(ctr, outputs=['user/angle', 'user/throttle', 'user/mode', 'recording'],threaded=True)
 
