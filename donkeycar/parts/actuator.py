@@ -824,21 +824,20 @@ class RobocarsHat:
 
     robocarshat_device = None
     robocarshat_lock = threading.Lock()
-    throttle = 0
-    steering = 0
 
     def __init__(self, cfg):
         import serial
 
         self.cfg = cfg
-
-        throttle = 0
-        steering = 0
+        self.buffer_string = ''
+        self.throttle = 0
+        self.steering = 0
 
         if RobocarsHat.robocarshat_device == None:
             RobocarsHat.robocarshat_device = serial.Serial(self.cfg.ROBOCARSHAT_SERIAL_PORT, 1000000, timeout = 0.01)
 
         self.running = True
+        print('RobocarsHat drive train created')
 
 
     def set_pulse(self, throttle, steering):
@@ -881,12 +880,18 @@ class RobocarsHat:
 
 
     def readline(self):
-        ret = None
+        last_received = None
         with RobocarsHat.robocarshat_lock:
-            if RobocarsHat.robocarshat_device.inWaiting() > 8:
-                ret = RobocarsHat.robocarshat_device.readlines()
+            while (RobocarsHat.robocarshat_device.inWaiting()>0):
+                self.buffer_string = '' = self.buffer_string = '' + RobocarsHat.robocarshat_device.read(RobocarsHat.robocarshat_device.inWaiting())
+                if '\n' in buffer_string:
+                    lines = buffer_string.split('\n') # Guaranteed to have at least 2 entries
+                    last_received = lines[-2]
+                    #If the Arduino sends lots of empty lines, you'll lose the
+                    #last filled line, so you could make the above statement conditional
+                    #like so: if lines[-2]: last_received = lines[-2]
+                    buffer_string = lines[-1]
+            if last_received != None:
+                last_received = last_received.rstrip()
 
-        if ret != None:
-            ret = ret[-1].rstrip()
-
-        return ret
+        return last_received
