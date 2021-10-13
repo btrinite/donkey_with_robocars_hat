@@ -16,6 +16,17 @@ class RobocarsHatIn:
         self.sensor = RobocarsHat(self.cfg)
         self.on = True
 
+    def map_range(self, x, X_min, X_max, Y_min, Y_max):
+        '''
+        Linear mapping between two ranges of values
+        '''
+        X_range = X_max - X_min
+        Y_range = Y_max - Y_min
+        XY_ratio = X_range/Y_range
+
+        return ((x-X_min) / XY_ratio + Y_min)
+
+
     def update(self):
 
         while self.on:
@@ -25,11 +36,11 @@ class RobocarsHatIn:
             while l:
 
                 params = l.split(',')
-                if len(params) == 4:
-                    self.inThrottle = self.map_range(param[0],
+                if len(params) == 5 and int(params[0])==1 :
+                   self.inThrottle = self.map_range(param[1],
                                                 self.cfg.ROBOCARSHAT_PWM_IN_THROTTLE_MIN, self.cfg.ROBOCARSHAT_PWM_IN_THROTTLE_MAX,
                                                 -1, 1)
-                    self.inSteering = self.map_range(param[1],
+                    self.inSteering = self.map_range(param[2],
                                                 self.cfg.ROBOCARSHAT_PWM_IN_STEERING_MIN, self.cfg.ROBOCARSHAT_PWM_IN_STEERING_MAX,
                                                 -1, 1)
                 l = self.sensor.readline()
