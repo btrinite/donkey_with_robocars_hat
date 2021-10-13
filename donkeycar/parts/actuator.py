@@ -884,13 +884,13 @@ class RobocarsHat:
         with RobocarsHat.robocarshat_lock:
             while (RobocarsHat.robocarshat_device.inWaiting()>0):
                 self.buffer_string =  self.buffer_string + RobocarsHat.robocarshat_device.read(RobocarsHat.robocarshat_device.inWaiting()).decode('ascii')
-                if '\n' in buffer_string:
-                    lines = buffer_string.split('\n') # Guaranteed to have at least 2 entries
+                if '\n' in self.buffer_string:
+                    lines = self.buffer_string.split('\n') # Guaranteed to have at least 2 entries
                     last_received = lines[-2]
                     #If the Arduino sends lots of empty lines, you'll lose the
                     #last filled line, so you could make the above statement conditional
                     #like so: if lines[-2]: last_received = lines[-2]
-                    buffer_string = lines[-1]
+                    self.buffer_string = lines[-1]
             if last_received != None:
                 last_received = last_received.rstrip()
 
