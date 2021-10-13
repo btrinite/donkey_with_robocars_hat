@@ -859,6 +859,7 @@ class RobocarsHat:
         with RobocarsHat.robocarshat_lock:
             cmd=("1,%d,%d\n" % (int(pulse_throttle), int(pulse_steering))).encode('ascii')
             RobocarsHat.robocarshat_device.write(cmd)
+            time.sleep(0.01)
 
     def run_threaded(self, throttle, steering):
         self.throttle = throttle
