@@ -61,7 +61,7 @@ class RobocarsHatIn:
         if (self.inAux1>0):
             recording=True
         if (self.inAux2>0):
-            mode='pilot'
+            mode='local'
 
         return self.inSteering, self.inThrottle, mode, recording
 
