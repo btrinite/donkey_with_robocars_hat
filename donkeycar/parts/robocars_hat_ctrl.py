@@ -33,14 +33,15 @@ class RobocarsHatIn:
             start = datetime.now()
 
             l = self.sensor.readline()
-            params = l.split(',')
-            if params!= None and len(params) == 5 and int(params[0])==1 :
-                self.inThrottle = self.map_range(int(params[1]),
-                    self.cfg.ROBOCARSHAT_PWM_IN_THROTTLE_MIN, self.cfg.ROBOCARSHAT_PWM_IN_THROTTLE_MAX,
-                    -1, 1)
-            self.inSteering = self.map_range(int(params[2]),
-                    self.cfg.ROBOCARSHAT_PWM_IN_STEERING_MIN, self.cfg.ROBOCARSHAT_PWM_IN_STEERING_MAX,
-                    -1, 1)
+            if params != None:
+                params = l.split(',')
+                if len(params) == 5 and int(params[0])==1 :
+                    self.inThrottle = self.map_range(int(params[1]),
+                        self.cfg.ROBOCARSHAT_PWM_IN_THROTTLE_MIN, self.cfg.ROBOCARSHAT_PWM_IN_THROTTLE_MAX,
+                        -1, 1)
+                    self.inSteering = self.map_range(int(params[2]),
+                        self.cfg.ROBOCARSHAT_PWM_IN_STEERING_MIN, self.cfg.ROBOCARSHAT_PWM_IN_STEERING_MAX,
+                        -1, 1)
 
             stop = datetime.now()
             s = 0.01 - (stop - start).total_seconds()
