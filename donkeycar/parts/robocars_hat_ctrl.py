@@ -24,7 +24,7 @@ class RobocarsHatIn:
             l = self.sensor.readline()
             while l:
 
-                params = l.split5(',')
+                params = l.split(',')
                 if len(params == 4):
                     self.inThrottle = self.map_range(param[0],
                                                 self.cfg.ROBOCARSHAT_PWM_IN_THROTTLE_MIN, self.cfg.ROBOCARSHAT_PWM_IN_THROTTLE_MAX,
