@@ -857,7 +857,8 @@ class RobocarsHat:
                                             self.cfg.ROBOCARSHAT_PWM_OUT_STEERING_MIN, self.cfg.ROBOCARSHAT_PWM_OUT_STEERING_IDLE)
 
         with RobocarsHat.robocarshat_lock:
-            RobocarsHat.robocarshat_device.write(("%d,%d\n" % (pulse_throttle, pulse_steering)).encode('ascii'))
+            cmd=("1,%d,%d\n" % (int(pulse_throttle), int(pulse_steering))).encode('ascii')
+            RobocarsHat.robocarshat_device.write(cmd)
 
     def run_threaded(self, throttle, steering):
         self.throttle = throttle
