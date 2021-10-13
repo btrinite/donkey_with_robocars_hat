@@ -883,7 +883,7 @@ class RobocarsHat:
         last_received = None
         with RobocarsHat.robocarshat_lock:
             while (RobocarsHat.robocarshat_device.inWaiting()>0):
-                self.buffer_string =  self.buffer_string + RobocarsHat.robocarshat_device.read(RobocarsHat.robocarshat_device.inWaiting())
+                self.buffer_string =  self.buffer_string + RobocarsHat.robocarshat_device.read(RobocarsHat.robocarshat_device.inWaiting()).decode('ascii')
                 if '\n' in buffer_string:
                     lines = buffer_string.split('\n') # Guaranteed to have at least 2 entries
                     last_received = lines[-2]
