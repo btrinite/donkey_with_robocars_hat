@@ -37,10 +37,10 @@ class RobocarsHatIn:
 
                 params = l.split(',')
                 if len(params) == 5 and int(params[0])==1 :
-                    self.inThrottle = self.map_range(params[1],
+                    self.inThrottle = self.map_range(int(params[1]),
                                                 self.cfg.ROBOCARSHAT_PWM_IN_THROTTLE_MIN, self.cfg.ROBOCARSHAT_PWM_IN_THROTTLE_MAX,
                                                 -1, 1)
-                    self.inSteering = self.map_range(params[2],
+                    self.inSteering = self.map_range(int(params[2]),
                                                 self.cfg.ROBOCARSHAT_PWM_IN_STEERING_MIN, self.cfg.ROBOCARSHAT_PWM_IN_STEERING_MAX,
                                                 -1, 1)
                 l = self.sensor.readline()
