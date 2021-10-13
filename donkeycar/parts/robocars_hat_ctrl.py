@@ -33,22 +33,19 @@ class RobocarsHatIn:
             start = datetime.now()
 
             l = self.sensor.readline()
-            while l:
+            params = l.split(',')
+            if params!= None and len(params) == 5 and int(params[0])==1 :
+                self.inThrottle = self.map_range(int(params[1]),
+                    self.cfg.ROBOCARSHAT_PWM_IN_THROTTLE_MIN, self.cfg.ROBOCARSHAT_PWM_IN_THROTTLE_MAX,
+                    -1, 1)
+            self.inSteering = self.map_range(int(params[2]),
+                    self.cfg.ROBOCARSHAT_PWM_IN_STEERING_MIN, self.cfg.ROBOCARSHAT_PWM_IN_STEERING_MAX,
+                    -1, 1)
 
-                params = l.split(',')
-                if len(params) == 5 and int(params[0])==1 :
-                    self.inThrottle = self.map_range(int(params[1]),
-                                                self.cfg.ROBOCARSHAT_PWM_IN_THROTTLE_MIN, self.cfg.ROBOCARSHAT_PWM_IN_THROTTLE_MAX,
-                                                -1, 1)
-                    self.inSteering = self.map_range(int(params[2]),
-                                                self.cfg.ROBOCARSHAT_PWM_IN_STEERING_MIN, self.cfg.ROBOCARSHAT_PWM_IN_STEERING_MAX,
-                                                -1, 1)
-                l = self.sensor.readline()
-
-                stop = datetime.now()
-                s = 0.01 - (stop - start).total_seconds()
-                if s > 0:
-                    time.sleep(s)
+            stop = datetime.now()
+            s = 0.01 - (stop - start).total_seconds()
+            if s > 0:
+                time.sleep(s)
 
     def run_threaded(self):
         return self.inSteering, self.inThrottle, 'user', False
