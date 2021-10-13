@@ -42,6 +42,12 @@ class RobocarsHatIn:
                     self.inSteering = self.map_range(int(params[2]),
                         self.cfg.ROBOCARSHAT_PWM_IN_STEERING_MIN, self.cfg.ROBOCARSHAT_PWM_IN_STEERING_MAX,
                         -1, 1)
+                    self.inAux1 = self.map_range(int(params[3]),
+                        self.cfg.ROBOCARSHAT_PWM_IN_AUX_MIN, self.cfg.ROBOCARSHAT_PWM_IN_AUX_MAX,
+                        -1, 1)
+                    self.inAux2 = self.map_range(int(params[4]),
+                        self.cfg.ROBOCARSHAT_PWM_IN_AUX_MIN, self.cfg.ROBOCARSHAT_PWM_IN_AUX_MAX,
+                        -1, 1)
 
             stop = datetime.now()
             s = 0.01 - (stop - start).total_seconds()
@@ -49,7 +55,17 @@ class RobocarsHatIn:
                 time.sleep(s)
 
     def run_threaded(self):
-        return self.inSteering, self.inThrottle, 'user', False
+        if (self.inAux1>1500):
+            recording=True
+        else:
+            recording=False
+
+        if (self.inAux2>1500):
+            mode='pilot'
+        else:
+            node='user'
+
+        return self.inSteering, self.inThrottle, mode, recording
 
     def shutdown(self):
         # indicate that the thread should be stopped
