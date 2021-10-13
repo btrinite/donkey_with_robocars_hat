@@ -55,15 +55,13 @@ class RobocarsHatIn:
                 time.sleep(s)
 
     def run_threaded(self):
+
+        recording=False
+        mode='user'
         if (self.inAux1>1500):
             recording=True
-        else:
-            recording=False
-
         if (self.inAux2>1500):
             mode='pilot'
-        else:
-            node='user'
 
         return self.inSteering, self.inThrottle, mode, recording
 
