@@ -33,7 +33,7 @@ class RobocarsHatIn:
             start = datetime.now()
 
             l = self.sensor.readline()
-            if params != None:
+            if l != None:
                 params = l.split(',')
                 if len(params) == 5 and int(params[0])==1 :
                     self.inThrottle = self.map_range(int(params[1]),
