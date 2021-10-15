@@ -62,6 +62,7 @@ class RobocarsHatIn:
             recording=True
         if (self.inAux2>0):
             mode='local_angle'
+            self.inThrottle = self.cfg.ROBOCARSHAT_LOCAL_ANGLE_FIX_THROTTLE
 
         return self.inSteering, self.inThrottle, mode, recording
 
