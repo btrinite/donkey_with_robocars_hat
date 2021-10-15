@@ -58,13 +58,14 @@ class RobocarsHatIn:
 
         recording=False
         mode='user'
+        user_throttle = self.inThrottle
         if (self.inAux1>0):
             recording=True
         if (self.inAux2>0):
             mode='local_angle'
-            self.inThrottle = self.cfg.ROBOCARSHAT_LOCAL_ANGLE_FIX_THROTTLE
+            user_throttle = self.cfg.ROBOCARSHAT_LOCAL_ANGLE_FIX_THROTTLE
 
-        return self.inSteering, self.inThrottle, mode, recording
+        return self.inSteering, user_throttle, mode, recording
 
     def shutdown(self):
         # indicate that the thread should be stopped
