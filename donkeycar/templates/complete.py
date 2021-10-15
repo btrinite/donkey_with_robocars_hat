@@ -225,6 +225,11 @@ def drive(cfg, model_path=None, use_joystick=False, model_type=None,
           outputs=['user/angle', 'user/throttle', 'user/mode', 'recording'],
           threaded=True)
 
+    if cfg.USE_ROBOCARSHAT_AS_CONTROLLER:
+            from donkeycar.parts.robocars_hat_ctrl import RobocarsHatIn
+            ctr = RobocarsHatIn(cfg)
+            V.add(ctr, outputs=['user/angle', 'user/throttle', 'user/mode', 'recording'],threaded=True)
+
     #this throttle filter will allow one tap back for esc reverse
     th_filter = ThrottleFilter()
     V.add(th_filter, inputs=['user/throttle'], outputs=['user/throttle'])
@@ -611,6 +616,10 @@ def drive(cfg, model_path=None, use_joystick=False, model_type=None,
                                             min_pulse=cfg.THROTTLE_REVERSE_PWM)
         V.add(steering, inputs=['angle'], threaded=True)
         V.add(throttle, inputs=['throttle'], threaded=True)
+    elif cfg.DRIVE_TRAIN_TYPE == "ROBOCARSHAT":
+        from donkeycar.parts.actuator import RobocarsHat
+        train_controller = RobocarsHat(cfg)
+        V.add(train_controller, inputs=['throttle','angle'], threaded=True)
 
     # OLED setup
     if cfg.USE_SSD1306_128_32:
