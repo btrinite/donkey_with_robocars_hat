@@ -1,17 +1,18 @@
-# donkeycar: a python self driving library, modified version with support for RobocarsHat
+# donkeycar: a python self driving library, modified version with support for DIYRobocarsFr Hat
 
-This is modified version of donkeycar to support RobocarsHat.
-RobocarsHat is a daughter board (Hat) for Raspberry Pi or Nvidia Jeston Nano to ease the built of a Donkey car
-You can find more about RobocarsHat here :
+This is modified version of donkeycar to support DIYRobocarsFr Hat.
+DIYRobocarsFr Hat is a daughter board (Hat) for Raspberry Pi or Nvidia Jeston Nano to ease the built of autonomous small scale RC-style car like the Donkey car. You can find more about DIYRobocarsFr Hat here :
 - [software](https://github.com/btrinite/robocars_hat)
 - [hardware](https://github.com/btrinite/robocars_hat_hw)
 
 #### Main changes to integrate RobocarsHat :
-- new part : [robocars_hat_ctrl.py](./donkeycar/parts/robocars_hat_ctrl.py) with new Class RobocarsHatIn, which is both a part to add support for driving the car from RC and also act as low level driver between raspberry pi/jetson nano and the hat. The controler part is enabled when USE_ROBOCARSHAT_AS_CONTROLLER is set to True.
-- updated [actuator.py](./donkeycar/parts/actuator.py) with a new Class RobocarsHat that is used to send throttle qnd steering orders to the hat (when DRIVE_TRAIN_TYPE is set to ROBOCARSHAT)
+- new part : [robocars_hat_ctrl.py](./donkeycar/parts/robocars_hat_ctrl.py) with new Class RobocarsHatIn, which is both a part to add support for receiving throttle and steering command from an RC Receiver and also act as low level driver between raspberry pi/jetson nano and the hat (to control the serial port). The controler part is enabled by setting USE_ROBOCARSHAT_AS_CONTROLLER configuation key to True.
+- updated [actuator.py](./donkeycar/parts/actuator.py) with a new Class RobocarsHat that is used to send throttle and steering orders to the hat, enabled by setting DRIVE_TRAIN_TYPE configuration key to ROBOCARSHAT.
 - new set of config parameters (search ROBOCARSHAT)
-- update [complete.py](./donkeycar/templates/complete.py) with instantiation of RobocarsHatIn and RobocarsHat accordingly to configuration
+- update [complete.py](./donkeycar/templates/complete.py) with instantiation of RobocarsHatIn and RobocarsHat accordingly to configuration.
 
+Warning : for Raspberry pi 3, you have to get rid of 'miniuart' and resplace it by the true UART device known as PL011.
+You will most likely lose Bluetooth. You can check [here](https://www.circuits.dk/setup-raspberry-pi-3-gpio-uart/)
 
 #### DOnkeycar :
 
