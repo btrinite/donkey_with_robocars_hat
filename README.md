@@ -1,4 +1,19 @@
-# donkeycar: a python self driving library
+# donkeycar: a python self driving library, modified version with support for RobocarsHat
+
+This is modified version of donkeycar to support RobocarsHat.
+RobocarsHat is a daughter board (Hat) for Raspberry Pi or Nvidia Jeston Nano to ease the built of a Donkey car
+You can find more about RobocarsHat here :
+- [software](https://github.com/btrinite/robocars_hat)
+- [hardware](https://github.com/btrinite/robocars_hat_hw)
+
+#### Main changes to integrate RobocarsHat :
+- new part : [robocars_hat_ctrl.py](./donkeycar/parts/robocars_hat_ctrl.py) with new Class RobocarsHatIn, which is both a part to add support for driving the car from RC and also act as low level driver between raspberry pi/jetson nano and the hat. The controler part is enabled when USE_ROBOCARSHAT_AS_CONTROLLER is set to True.
+- updated [actuator.py](./donkeycar/parts/actuator.py) with a new Class RobocarsHat that is used to send throttle qnd steering orders to the hat (when DRIVE_TRAIN_TYPE is set to ROBOCARSHAT)
+- new set of config parameters (search ROBOCARSHAT)
+- update [complete.py](./donkeycar/templates/complete.py) with instantiation of RobocarsHatIn and RobocarsHat accordingly to configuration
+
+
+#### DOnkeycar :
 
 [![Build Status](https://travis-ci.org/autorope/donkeycar.svg?branch=dev)](https://travis-ci.org/autorope/donkeycar)
 [![CodeCov](https://codecov.io/gh/autoropoe/donkeycar/branch/dev/graph/badge.svg)](https://codecov.io/gh/autorope/donkeycar/branch/dev)
