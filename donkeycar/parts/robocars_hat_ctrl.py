@@ -36,18 +36,22 @@ class RobocarsHatIn:
             if l != None:
                 params = l.split(',')
                 if len(params) == 5 and int(params[0])==1 :
-                    self.inThrottle = self.map_range(int(params[1]),
-                        self.cfg.ROBOCARSHAT_PWM_IN_THROTTLE_MIN, self.cfg.ROBOCARSHAT_PWM_IN_THROTTLE_MAX,
-                        -1, 1)
-                    self.inSteering = self.map_range(int(params[2]),
-                        self.cfg.ROBOCARSHAT_PWM_IN_STEERING_MIN, self.cfg.ROBOCARSHAT_PWM_IN_STEERING_MAX,
-                        -1, 1)
-                    self.inAux1 = self.map_range(int(params[3]),
-                        self.cfg.ROBOCARSHAT_PWM_IN_AUX_MIN, self.cfg.ROBOCARSHAT_PWM_IN_AUX_MAX,
-                        -1, 1)
-                    self.inAux2 = self.map_range(int(params[4]),
-                        self.cfg.ROBOCARSHAT_PWM_IN_AUX_MIN, self.cfg.ROBOCARSHAT_PWM_IN_AUX_MAX,
-                        -1, 1)
+                    if params[0].isnumeric():
+                        self.inThrottle = self.map_range(int(params[1]),
+                                self.cfg.ROBOCARSHAT_PWM_IN_THROTTLE_MIN, self.cfg.ROBOCARSHAT_PWM_IN_THROTTLE_MAX,
+                            -1, 1)
+                    if params[2].isnumeric():
+                        self.inSteering = self.map_range(int(params[2]),
+                            self.cfg.ROBOCARSHAT_PWM_IN_STEERING_MIN, self.cfg.ROBOCARSHAT_PWM_IN_STEERING_MAX,
+                            -1, 1)
+                    if params[3].isnumeric():
+                        self.inAux1 = self.map_range(int(params[3]),
+                            self.cfg.ROBOCARSHAT_PWM_IN_AUX_MIN, self.cfg.ROBOCARSHAT_PWM_IN_AUX_MAX,
+                            -1, 1)
+                    if params[4].isnumeric():
+                        self.inAux2 = self.map_range(int(params[4]),
+                            self.cfg.ROBOCARSHAT_PWM_IN_AUX_MIN, self.cfg.ROBOCARSHAT_PWM_IN_AUX_MAX,
+                            -1, 1)
 
             stop = datetime.now()
             s = 0.01 - (stop - start).total_seconds()
