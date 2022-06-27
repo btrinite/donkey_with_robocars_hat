@@ -235,6 +235,36 @@ ROBOCARSHAT_PWM_IN_AUX_IDLE   =   1500
 ROBOCARSHAT_PWM_IN_AUX_MAX    =   2000
 
 ROBOCARSHAT_LOCAL_ANGLE_FIX_THROTTLE = 0.2
+ROBOCARSHAT_LOCAL_ANGLE_BRAKE_THROTTLE = -0.2
+
+THROTTLE_BRAKE_REV_FILTER = False # ESC is configured in Fw/Rv mode (no braking)
+
+#ROBOCARSHAT_CH3_FEATURE control the feature attached to radio ch3
+# 'record/pilot' mean ch3 is used to control either data recording (lower position), either to enable pilot mode (upper position)
+# 'throttle_exploration' means special mode where CH3 is used to increment/decrement a fixed throttle value in user mode 
+# 'steering_exploration' means special mode where CH3 is used to increment/decrement a fixed steering value in user mode 
+# 'output_steering_trim' means special mode where CH3 is used to increment/decrement a steering idle output for triming direction in user mode, resulting value must be reported in  ROBOCARSHAT_PWM_OUT_STEERING_IDLE
+# 'output_steering_exp' means special mode where CH3 is used to increment/decrement a fixed steering output to calibrate direction in user mode, resulting values must be reported in  ROBOCARSHAT_PWM_IN_STEERING_MIN and ROBOCARSHAT_PWM_IN_STEERING_MAX
+ROBOCARSHAT_CH3_FEATURE = 'record/pilot' 
+ROBOCARSHAT_THROTTLE_EXP_INC = 0.05 
+ROBOCARSHAT_STEERING_EXP_INC = 0.05 
+ROBOCARSHAT_OUTPUT_STEERING_TRIM_INC = 10 
+
+#ROBOCARSHAT_STEERING_FIX used for steering calibration, enforce a fixed steering value (betzeen -1.0 and 1.0). None means no enforcment
+ROBOCARSHAT_STEERING_FIX = None 
+
+# ROBOCARSHAT_THROTTLE_DISCRET used to control throttle with discretes values (only in user mode, first value must be 0.0)
+# ROBOCARSHAT_THROTTLE_DISCRET has precedence over ROBOCARSHAT_THROTTLE_FLANGER
+#Example : ROBOCARSHAT_THROTTLE_DISCRET = [0.0, 0.1, 0.2], if not used, set to None 
+ROBOCARSHAT_THROTTLE_DISCRET = None 
+
+# ROBOCARSHAT_THROTTLE_FLANGER used to control throttle flange, giving a range betzeen -1 and 1, like [-0.1, 0.1]
+#Example : ROBOCARSHAT_THROTTLE_FLANGER = [-0.1, 0.1], if not used, set to None 
+#ROBOCARSHAT_THROTTLE_FLANGER = None 
+ROBOCARSHAT_THROTTLE_FLANGER = [-0.2,0.2] 
+
+# ROBOCARSHAT_USE_AUTOCALIBRATION used to rely on idle coming from autocalibation done by hat
+ROBOCARSHAT_USE_AUTOCALIBRATION = True
 
 #LOGGING
 HAVE_CONSOLE_LOGGING = True

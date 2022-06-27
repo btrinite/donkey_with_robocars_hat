@@ -820,6 +820,8 @@ class RobocarsHat:
 
     robocarshat_device = None
     robocarshat_lock = threading.Lock()
+    steeringTrim = None # common to the two instances
+    fixSteering = None # common to the two instances
 
     def __init__(self, cfg):
         import serial
@@ -835,34 +837,54 @@ class RobocarsHat:
         self.running = True
         print('RobocarsHat drive train created')
 
+    def setSteeringTrim (self, steeringTrim) :
+        RobocarsHat.steeringTrim=steeringTrim
+        mylogger.info("Tx set Steering Trim to :{}".format(RobocarsHat.steeringTrim))
+
+    def setFixSteering (self, fixSteering) :
+        RobocarsHat.fixSteering=fixSteering
+        mylogger.info("Tx set FIxed Steering to :{}".format(RobocarsHat.fixSteering))
 
     def set_pulse(self, throttle, steering):
 
         if throttle > 0:
             pulse_throttle = dk.utils.map_range(throttle, 0, self.MAX_THROTTLE,
                                             self.cfg.ROBOCARSHAT_PWM_OUT_THROTTLE_IDLE, self.cfg.ROBOCARSHAT_PWM_OUT_THROTTLE_MAX)
-        else:
+        elif throttle<0:
             pulse_throttle = dk.utils.map_range(throttle, self.MIN_THROTTLE, 0,
                                             self.cfg.ROBOCARSHAT_PWM_OUT_THROTTLE_MIN, self.cfg.ROBOCARSHAT_PWM_OUT_THROTTLE_IDLE)
+        else:
+            pulse_throttle = self.cfg.ROBOCARSHAT_PWM_OUT_THROTTLE_IDLE
+
+        steeringIdle = self.cfg.ROBOCARSHAT_PWM_OUT_STEERING_IDLE
+        
+        if (RobocarsHat.steeringTrim != None):
+            steeringIdle = RobocarsHat.steeringTrim;
 
         if steering > 0:
             pulse_steering = dk.utils.map_range(steering, 0, self.MAX_STEERING,
-                                            self.cfg.ROBOCARSHAT_PWM_OUT_STEERING_IDLE, self.cfg.ROBOCARSHAT_PWM_OUT_STEERING_MAX)
-        else:
+                                            steeringIdle, self.cfg.ROBOCARSHAT_PWM_OUT_STEERING_MAX)
+        elif steering<0 :
             pulse_steering = dk.utils.map_range(steering, self.MIN_STEERING, 0,
-                                            self.cfg.ROBOCARSHAT_PWM_OUT_STEERING_MIN, self.cfg.ROBOCARSHAT_PWM_OUT_STEERING_IDLE)
+                                            self.cfg.ROBOCARSHAT_PWM_OUT_STEERING_MIN, steeringIdle)
+        else:
+            pulse_steering = steeringIdle
 
+        if (RobocarsHat.fixSteering != None):
+            pulse_steering = RobocarsHat.fixSteering
+            
         with RobocarsHat.robocarshat_lock:
             cmd=("1,%d,%d\n" % (int(pulse_throttle), int(pulse_steering))).encode('ascii')
+            mylogger.debug("Tx CMD :{}".format(cmd))
             RobocarsHat.robocarshat_device.write(cmd)
-            time.sleep(0.01)
 
     def run_threaded(self, throttle, steering):
-        self.throttle = throttle
-        self.steering = steering
+        # not implemented
+        pass
 
     def run(self, throttle, steering):
-        self.run_threaded(throttle, steering)
+        self.throttle = throttle
+        self.steering = steering
         self.set_pulse(self.throttle, self.steering)
 
     def shutdown(self):
@@ -871,25 +893,31 @@ class RobocarsHat:
         self.steering = 0
         time.sleep(0.3)
         self.running = False
-        
-    def update(self):
-        while self.running:
-            self.set_pulse(self.throttle, self.steering)
 
+    def update(self):
+        # Not implemented
+        pass
 
     def readline(self):
-        last_received = None
+        last_received = []
         with RobocarsHat.robocarshat_lock:
             while (RobocarsHat.robocarshat_device.inWaiting()>0):
                 self.buffer_string =  self.buffer_string + RobocarsHat.robocarshat_device.read(RobocarsHat.robocarshat_device.inWaiting()).decode('ascii')
                 if '\n' in self.buffer_string:
                     lines = self.buffer_string.split('\n') # Guaranteed to have at least 2 entries
-                    last_received = lines[-2]
+                    self.buffer_string = lines[-1]
+                    drive = list(filter(lambda line: line.startswith('1'), lines[:-1]))
+                    battery = list(filter(lambda line: line.startswith('0'), lines[:-1]))
+                    sensors = list(filter(lambda line: line.startswith('2'), lines[:-1]))
+                    calibration = list(filter(lambda line: line.startswith('3'), lines[:-1]))
+                    if (len(drive)>0) :
+                        last_received.append(drive[-1].rstrip())
+                    if (len(calibration)>0) :
+                        last_received.append(calibration[-1].rstrip())
                     #If the Arduino sends lots of empty lines, you'll lose the
                     #last filled line, so you could make the above statement conditional
                     #like so: if lines[-2]: last_received = lines[-2]
-                    self.buffer_string = lines[-1]
-            if last_received != None:
-                last_received = last_received.rstrip()
 
         return last_received
+
+
